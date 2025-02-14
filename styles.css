@@ -1,0 +1,27 @@
+.row{
+    display:flex;
+    justify-content: center;
+    flex-wrap:wrap;
+
+}
+.box{
+    width:300px;
+    border-radius:20px;
+    margin:20px;
+    border:1px solid gray;
+    padding:20px
+}
+.box button{
+    background-color:green;
+    font-size:20px;
+    color:white;
+    width:100%;
+    padding:10px;
+}
+.header{
+     display: flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+
+  
+}

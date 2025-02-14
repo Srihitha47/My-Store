@@ -1,69 +1,83 @@
-// // <!DOCTYPE html>
-// // <html lang="en">
-// //   <head>
-// //     <meta charset="UTF-8" />
-// //     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-// //     <title>Document</title>
-//     <script>
-      const products = [
-        { id: 1, name: "P1", price: 34 },
-        { id: 2, name: "P2", price: 50 },
-        { id: 3, name: "P3", price: 40 },
-      ];
-      const cart = {};
-      const addToCart = (id) => {
-        if(!cart[id])//condition 
-        cart[id] = 1;
-        items.innerHTML=0;
-        showCart();
-      };
-      const increment=(id)=>{
-        //let value = 0;
-        items.innerHTML=100;
-        cart[id]=cart[id]+1;
-        showCart();
-      }
-      const decrement=(id)=>{
-        //let value = 0;
-        items.innerHTML=50;
-        cart[id]=cart[id]-1;
-        showCart();
-      }
-      const del=(id)=>{
-        delete cart[id];
-        showCart();
+// const products = [
+//   { id: 1, name: "P1", price: 34 },
+//   { id: 2, name: "P2", price: 50 },
+//   { id: 3, name: "P3", price: 40 },
+// ];
+let products = []
 
-      }
-      const showCart = () => {
-        let str = "";
-        products.map((value) => {
-          if (cart[value.id]) {
-            str += `<div>${value.id}-${value.name}-${value.price}-
-            <button onclick='decrement(${value.id})'>-</button>
-            ${cart[value.id]}
-            <button onclick='increment(${value.id})'>+</button>
-            -${value.price*cart[value.id]}-
-            <button onclick='del(${value.id})'>delete</button></div>`;
-          }
-        });
-        divCart.innerHTML = str;
-      };
-      const showProducts = () => {
-        let str = "";
-        products.map((value) => {
-          str += `<div>${value.id}-${value.name}-${value.price}-
-        <button onclick='addToCart(${value.id})'>Add</button></div>`;
-        });
-        divProducts.innerHTML = str;
-      };
-//     </script>
-//   </head>
-//   <body onload="showProducts()">
-//     <h1>My Store</h1>
-//     <hr />
-//     <h3>Products</h3>
-//     <div id="divProducts"></div>
-//     <h3>My Cart</h3>
-//     <div id="divCart"></div>
-//   </body>
-// </html>
+fetch("products.json")
+  .then((response) => response.json()) 
+  .then((data) => (showProducts(data))) 
+  
+
+const cart = {};
+const addToCart = (id) => {
+  if (!cart[id]) cart[id] = 1;
+  showCart();
+};
+const increment = (id) => {
+  cart[id] = cart[id] + 1;
+  showCart();
+};
+const decrement = (id) => {
+  cart[id] = cart[id] - 1;
+  showCart();
+};
+
+const displayCart = () => {
+  cartBox.style.display = "block";
+  productBox.style.display = "none";
+};
+
+const hideCart = () => {
+  cartBox.style.display = "none";
+  productBox.style.display = "block";
+};
+
+const deleteCart = (id) => {
+  delete cart[id];
+  showCart();
+};
+
+const showTotal = () => {
+  let total = products.reduce((sum, value) => {
+    return sum + value.price * (cart[value.id] ?? 0);
+  }, 0);
+  order.innerHTML = total;
+};
+
+const showCart = () => {
+  let count = Object.keys(cart).length;
+  items.innerHTML = count;
+  showTotal();
+  let str = "";
+  products.map((value) => {
+    if (cart[value.id]) {
+      str += `<div>
+      ${value.id}-${value.name}-${value.price}-
+      <button onclick='decrement(${value.id})'>-</button>
+      ${cart[value.id]}
+      <button onclick='increment(${value.id})'>+</button>
+      -${value.price * cart[value.id]}
+      -<button onclick='deleteCart(${value.id})'>Delete</button>
+      </div>`;
+    }
+  });
+  divCart.innerHTML = str;
+};
+const showProducts = (data) => {
+  products = data
+  let str = "<div class='row'>";
+  products.map((value) => {
+    str += `
+    <div class='box'>
+    <img src='${value.url}'>
+    <h3>${value.name}</h3>
+    <p>${value.desc}</p>
+    <h4>${value.price}</h4>
+    <button onclick='addToCart(${value.id})'>Add to Cart</button>
+    </div>
+    `;
+  });
+  divProducts.innerHTML = str +"</div>";
+};
