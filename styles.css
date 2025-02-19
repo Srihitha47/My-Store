@@ -12,7 +12,7 @@
     padding:20px
 }
 .box button{
-    background-color:green;
+    background-color:plum;
     font-size:20px;
     color:white;
     width:100%;
@@ -24,4 +24,13 @@
     flex-wrap:wrap;
 
   
+}
+.menu{
+    display:flex;
+    justify-content: space-between;
+}
+.menu div{
+    padding:10px;
+    display:flex;
+    justify-content: space-between;
 }
