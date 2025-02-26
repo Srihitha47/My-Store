@@ -5,94 +5,123 @@ fetch("products.json")
   .then(response => response.json())
   .then(data => {
       products = data;
-      showProducts(products); // Initially display all products
-  });
+      showProducts(products); // Display all products initially
+  })
+  .catch(error => console.error("Error loading products:", error));
 
 const cart = {};
 
+// Add to cart function
 const addToCart = (id) => {
-    if (!cart[id]) cart[id] = 1;
+    if (cart[id]) {
+        cart[id]++; // Increase quantity if already in cart
+    } else {
+        cart[id] = 1; // Add new item to cart
+    }
     showCart();
 };
 
+// Increment item quantity in cart
 const increment = (id) => {
-    cart[id] = cart[id] + 1;
+    cart[id]++;
     showCart();
 };
 
+// Decrement item quantity in cart
 const decrement = (id) => {
-    cart[id] = cart[id] - 1;
-    if (cart[id] === 0) delete cart[id];
+    if (cart[id] > 1) {
+        cart[id]--;
+    } else {
+        delete cart[id]; // Remove item if quantity reaches 0
+    }
     showCart();
 };
 
+// Display the cart
 const displayCart = () => {
     document.getElementById("cartBox").style.display = "block";
     document.getElementById("productBox").style.display = "none";
 };
 
+// Hide the cart
 const hideCart = () => {
     document.getElementById("cartBox").style.display = "none";
     document.getElementById("productBox").style.display = "block";
 };
 
+// Remove item from cart
 const deleteCart = (id) => {
     delete cart[id];
     showCart();
 };
 
+// Calculate total order value
 const showTotal = () => {
-    let total = products.reduce((sum, value) => {
-        return sum + value.price * (cart[value.id] ?? 0);
+    let total = products.reduce((sum, product) => {
+        return sum + (product.price * (cart[product.id] || 0));
     }, 0);
-    document.getElementById("order").innerHTML = total;
+    document.getElementById("order").innerHTML = total.toFixed(2);
 };
 
+// Display cart items
 const showCart = () => {
-    let count = Object.keys(cart).length;
+    let count = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
     document.getElementById("items").innerHTML = count;
-    showTotal();
-    
-    let str = "";
-    products.forEach((value) => {
-        if (cart[value.id]) {
-            str += `
-            <div>
-                ${value.id} - ${value.name} - ${value.price} 
-                <button onclick='decrement(${value.id})'>-</button>
-                ${cart[value.id]}
-                <button onclick='increment(${value.id})'>+</button>
-                - ${value.price * cart[value.id]}
-                <button onclick='deleteCart(${value.id})'>Delete</button>
+
+    let cartHTML = "";
+    products.forEach((product) => {
+        if (cart[product.id]) {
+            cartHTML += `
+            <div class="cart-item">
+                <img src="${product.url}" alt="${product.name}" class="cart-img">
+                <div class="cart-details">
+                    <h4>${product.name}</h4>
+                    <p>Price: $${product.price}</p>
+                    <div class="cart-controls">
+                        <button onclick='decrement(${product.id})'>-</button>
+                        <span>${cart[product.id]}</span>
+                        <button onclick='increment(${product.id})'>+</button>
+                    </div>
+                    <p>Total: $${(product.price * cart[product.id]).toFixed(2)}</p>
+                    <button onclick='deleteCart(${product.id})' class="delete-btn">Remove</button>
+                </div>
             </div>`;
         }
     });
-    document.getElementById("divCart").innerHTML = str;
+
+    document.getElementById("divCart").innerHTML = cartHTML || "<p>Your cart is empty.</p>";
+    showTotal();
 };
 
 // Function to display products
 const showProducts = (filteredProducts) => {
-    let str = "<div class='row'>";
-    filteredProducts.forEach((value) => {
-        str += `
+    let productsHTML = "<div class='row'>";
+    filteredProducts.forEach((product) => {
+        productsHTML += `
         <div class='box'>
-            <img src='${value.url}' alt='${value.name}'>
-            <h3>${value.name}</h3>
-            <p>${value.desc}</p>
-            <h4>${value.price}</h4>
-            <button onclick='addToCart(${value.id})'>Add to Cart</button>
+            <img src='${product.url}' alt='${product.name}'>
+            <h3>${product.name}</h3>
+            <p>${product.desc}</p>
+            <h4>$${product.price.toFixed(2)}</h4>
+            <button onclick='addToCart(${product.id})'>Add to Cart</button>
         </div>`;
     });
-    document.getElementById("divProducts").innerHTML = str + "</div>";
+    document.getElementById("divProducts").innerHTML = productsHTML + "</div>";
 };
 
 // Search function
 function searchProducts() {
     let input = document.getElementById("searchBox").value.toLowerCase();
-    let filteredProducts = products.filter(product => product.name.toLowerCase().includes(input));
+    let filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(input)
+    );
 
-    // Display only searched products
-    showProducts(filteredProducts);
+    // Show search results or all products if empty
+    if (filteredProducts.length > 0) {
+        showProducts(filteredProducts);
+    } else {
+        document.getElementById("divProducts").innerHTML = "<p>No products found.</p>";
+    }
 }
 
 // Clear search function
@@ -104,5 +133,5 @@ function clearSearch() {
 // Toggle search box visibility
 function toggleSearch() {
     let searchContainer = document.getElementById("searchContainer");
-    searchContainer.style.display = searchContainer.style.display === "none" ? "block" : "none";
+    searchContainer.style.display = searchContainer.style.display === "none" || searchContainer.style.display === "" ? "block" : "none";
 }

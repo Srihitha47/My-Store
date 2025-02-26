@@ -7,6 +7,19 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="index.js" defer></script>
 </head>
+<script>
+    window.onload = function() {
+        let loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!loggedInUser) {
+            window.location.href = "login.html"; // Redirect to login if not authenticated
+        }
+    };
+
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login.html"; // Redirect to login page after logout
+    }
+</script>
 <body>
 
     <div class="header">
@@ -19,9 +32,11 @@
                 <li><a href="contacts.html">Contact</a></li>
                 <li><a href="#" onclick="toggleSearch()">Search</a></li>
                 <li><a href="#" onclick="displayCart()">Cart: <span id="items">0</span></a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li> <!-- Logout Button -->
             </ul>
         </nav>
     </div>
+
     <div id="searchContainer">
         <input type="text" id="searchBox" placeholder="Search products..." onkeyup="searchProducts()">
         <button onclick="clearSearch()">Clear</button>
