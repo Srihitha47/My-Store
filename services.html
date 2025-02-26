@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - My Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="header">
+        <h1>My Store</h1>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#" onclick="toggleSearch()">Search</a></li>
+        </ul>
+    </div>
+    
+    <div id="searchContainer" style="display: none; text-align: center; margin-top: 10px;">
+        <input type="text" id="searchBox" placeholder="Search Services..." onkeyup="searchServices()">
+        <button onclick="clearSearch()">Clear</button>
+    </div>
+
+    <hr>
+
+    <div id="servicesBox">
+        <h2>Our Services</h2>
+        <div id="divServices"></div>
+    </div>
+
+    <script>
+        const services = [
+            { id: 1, name: "Free Shipping", desc: "We offer free shipping on all orders above $50." },
+            { id: 2, name: "24/7 Customer Support", desc: "Our support team is available 24/7 to assist you." },
+            { id: 3, name: "Easy Returns", desc: "Hassle-free returns within 30 days of purchase." },
+            { id: 4, name: "Secure Payments", desc: "We ensure 100% secure payment transactions." },
+            { id: 5, name: "Discount Offers", desc: "Get exclusive discounts and deals on products." }
+        ];
+
+        const showServices = (filteredServices) => {
+            let str = "<div class='row'>";
+            filteredServices.forEach(service => {
+                str += `
+                <div class='box'>
+                    <h3>${service.name}</h3>
+                    <p>${service.desc}</p>
+                </div>`;
+            });
+            document.getElementById("divServices").innerHTML = str + "</div>";
+        };
+
+
+        showServices(services);
+
+   
+        function searchServices() {
+            let input = document.getElementById("searchBox").value.toLowerCase();
+            let filteredServices = services.filter(service => service.name.toLowerCase().includes(input));
+
+            showServices(filteredServices);
+        }
+
+     
+        function clearSearch() {
+            document.getElementById("searchBox").value = "";
+            showServices(services); 
+        }
+
+       
+        function toggleSearch() {
+            let searchContainer = document.getElementById("searchContainer");
+            searchContainer.style.display = searchContainer.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
+    <h4 style="text-align: center;">&copy; 2025. All rights reserved.</h4>
+
+</body>
+</html>

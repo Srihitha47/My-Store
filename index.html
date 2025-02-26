@@ -1,34 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>My Store</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="index.js"></script>
-  </head>
-  <body>
+    <script src="index.js" defer></script>
+</head>
+<body>
 
     <div class="header">
-    <h1>My Store</h1>
-    <h4 onclick="displayCart()">Cart:<span id="items"></span></h4>
-    <h4 onclick="hideCart()">Home</h4>
-    
+        <h1>My Store</h1>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="hideCart()">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contacts.html">Contact</a></li>
+                <li><a href="#" onclick="toggleSearch()">Search</a></li>
+                <li><a href="#" onclick="displayCart()">Cart: <span id="items">0</span></a></li>
+            </ul>
+        </nav>
     </div>
-</div>
+    <div id="searchContainer">
+        <input type="text" id="searchBox" placeholder="Search products..." onkeyup="searchProducts()">
+        <button onclick="clearSearch()">Clear</button>
+    </div>
+
     <hr />
 
     <div id="productBox">
-      <h3>Products</h3>
-      <div id="divProducts"></div>
+        <h3>All Products</h3>
+        <div id="divProducts"></div>
+    </div>
+    <div id="searchResultsBox" style="display: none;">
+        <h3>Search Results</h3>
+        <div id="searchResults"></div>
     </div>
 
     <div id="cartBox" style="display: none">
-      <h3>My Cart</h3>
-      <div id="divCart"></div>
-      <h4>Order value:<span id="order"></span></h4>
-      <button onclick="hideCart()">Close</button>
+        <h3>My Cart</h3>
+        <div id="divCart"></div>
+        <h4>Order value: <span id="order"></span></h4>
+        <button onclick="hideCart()">Close</button>
     </div>
-    <h4><center>@Copyright 2025.All rights reserverd</center></h4>
-  </body>
+
+    <h4><center>&copy; 2025. All rights reserved.</center></h4>
+
+</body>
 </html>
